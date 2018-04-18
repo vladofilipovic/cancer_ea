@@ -72,7 +72,7 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                            else:
                                j += 1    
                    # attach leaf node
-                   leaf.parent = parentOfLeaf
+                   parentOfLeaf.attchAsChild(leaf)
                    leaf.binaryTag.append( leaf.parent.binaryTag )
                    indexBit = count( leaf.parent.children ) - 1
                    #print("#", indexBit)
