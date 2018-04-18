@@ -19,6 +19,8 @@ def initIndividual(ind_class, labels, size):
 x = initIndividual(GaNode, ['a','b','c','d','e'], 10)  
 x.printGaSubtree() 
 
+y = initIndividual(GaNode, ['a','b','c','d','e'], 10)  
+y.printGaSubtree() 
 
-
-
+z = initIndividual(GaNode, ['a','b','c','d','e'], 10)  
+z.printGaSubtree() 

@@ -15,17 +15,25 @@ from bitstring import BitArray
 def flip(label):
     if(label.endswith('+')):
         return label.replace('+', '-')
-    elif(label.endswith('+')): 
+    elif(label.endswith('-')): 
         return label.replace('-', '+')
     return label
 
-# helper function that count elements
+# helper function that count elements in collection
 def count(collection):
     i=0
     for node in collection:
         i+=1
     return i
 
+# helper function that fids a postion of the element in collection
+def indexOf(collection, element, start=0):
+    for i in range(start, collection.length):
+        if( i < start ):
+            continue;
+        if( collection[i]==element):
+            return i;
+    return -1
 
 class GaNodeInfo(object):
     typeDescription = "GaNodeInfo"
@@ -74,13 +82,13 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                            else:
                                j += 1    
                    # attach leaf node
-                   parentOfLeaf.attchAsChild(leaf)
+                   parentOfLeaf.attachAsChild(leaf)
                    leaf.binaryTag.append( leaf.parent.binaryTag )
-                   indexBit = count( leaf.parent.children ) - 1
-                   #print("#", indexBit)
-                   #indexBit = leaf.binaryTag.find(False, start = indexBit)
-                   #print("#", indexBit)
-                   leaf.binaryTag.invert(indexBit)
+                   #
+                   indexBit = count( leaf.parent.children )-1
+                   indexBit = indexOf( leaf.binaryTag, False, start = indexBit+1)
+                   if( indexBit >= 0):
+                       leaf.binaryTag.invert(indexBit)
                    node = leaf.parent
                    # reverse mutation label, if necessary
                    while( node.parent != None):
