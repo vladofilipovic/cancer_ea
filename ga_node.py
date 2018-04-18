@@ -11,6 +11,7 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 
 from bitstring import BitArray
 
+# helper function that flip the label
 def flip(label):
     if(label.endswith('+')):
         return label.replace('+', '-')
@@ -18,6 +19,7 @@ def flip(label):
         return label.replace('-', '+')
     return label
 
+# helper function that count elements
 def count(collection):
     i=0
     for node in collection:
