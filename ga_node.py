@@ -38,10 +38,24 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         self.binaryTag = binaryTag
         self.parent = parent
 
-    # function for printing GA subtree
-    def printGaSubtree( self, endS = '\n'):
+    def __repr__(self):
+        ret = ""
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s" % (pre, node.nodeLabel)
+            ret += treestr.ljust(18) + ' ' + node.binaryTag.bin + '\n'
+        return ret
+    
+    def __str__(self):
+        ret = ""
+        for pre, _, node in RenderTree(self):
+            treestr = u"%s%s" % (pre, node.nodeLabel)
+            ret += treestr.ljust(18) + ' ' + node.binaryTag.bin + '\n'
+        return ret
+
+    # function for printing GA subtree
+    def printTree( self, endS = '\n'):
+        for pre, _, node in RenderTree(self):
+            treestr = u"%s%s " % (pre, node.nodeLabel)
             print(treestr.ljust(8), node.binaryTag.bin )
         print(end=endS)
         return
@@ -108,9 +122,13 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                if( i > size ):
                     probabilityOfNodeCreation *= 0.6
         return
-        
-     # compression od the tree
-    def compressTree(self):
+  
+    # horizontal compression od the tree
+    def compressTreeHorizontal(self):
+        return
+       
+     # vertical compression od the tree
+    def compressTreeVertical(self):
         for n in self.children:
             for c in n.children:
                 if( n.nodeLabel[:-1] == c.nodeLabel[:-1]):
@@ -127,20 +145,22 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         return
          
 # initialization of the individual
-def initIndividual(ind_class, labels, size):
+def initGaNodeIndividual(ind_class, labels, size):
     rootBitArray = BitArray(int = 0, length = size)
     root = ind_class('--', rootBitArray)
     root.initializeTree( labels, size)
-    #root.compressTree()
+    root.compressTreeHorizontal()
     return root
 
 # mutation
-def mutation(individual):
-    individual.printTree()
+def mutationGaNode(individual):
+    print( "In mutation" )
+    print( individual )
+    #individual.printTree()
     #randomIndex = random.choice(individual.children)
     return (individual,)
 
 # evaluation
-def evaluation(individual):
+def evaluationGaNode(individual):
     return (individual),
   

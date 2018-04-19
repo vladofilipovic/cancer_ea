@@ -13,10 +13,7 @@ from bitstring import BitArray
 
 from read_element import ReadElement
 
-from ga_node import GaNode
-from ga_node import initIndividual
-from ga_node import mutation
- 
+from ga_node import GaNode, initGaNodeIndividual, mutationGaNode
 
 from deap import base
 from deap import creator
@@ -103,8 +100,8 @@ toolbox = base.Toolbox()
 toolbox.register("attr_bool", random.randint, 0, 1)
 
 # Structure initializers
-toolbox.register("individual", initIndividual, creator.Individual, labels=labelsMutation, size=10)
-toolbox.register("mutate", mutation)
+toolbox.register("individual", initGaNodeIndividual, creator.Individual, labels=labelsMutation, size=10)
+toolbox.register("mutate", mutationGaNode)
 
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
@@ -116,7 +113,7 @@ else:
     print( "Class Individual is NOT sublass of class GaNode")
     
 #test_ind.fitness.values = (12, 0)
-#toolbox.mutate(test_ind)
+toolbox.mutate(test_ind)
 
 
 
