@@ -12,12 +12,12 @@ import random
 random.seed( 111133 )
       
 x = initGaNodeIndividual(GaNode, ['a','b','c','d','e'], 10)  
-x.printTree() 
+x.treePrint() 
 
 y = initGaNodeIndividual(GaNode, ['a','b','c','d','e'], 10)  
-y.printTree() 
+y.treePrint() 
 
 z = initGaNodeIndividual(GaNode, ['a','b','c','d','e'], 10)  
-z.printTree() 
+z.treePrint() 
 
 mutationGaNode(z)

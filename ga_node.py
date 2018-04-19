@@ -53,7 +53,7 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         return ret
 
     # function for printing GA subtree
-    def printTree( self, endS = '\n'):
+    def treePrint( self, endS = '\n'):
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s " % (pre, node.nodeLabel)
             print(treestr.ljust(8), node.binaryTag.bin )
@@ -74,7 +74,7 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         return
 
     # initialization od the tree
-    def initializeTree(self, labels, size):
+    def treeInitialize(self, labels, size):
         currentTreeSize = 1
         probabilityOfNodeCreation = 0.9
         for i in range(2 * size):
@@ -99,10 +99,10 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                    parentOfLeaf.attachAsChild(leaf)
                    leaf.binaryTag.append( leaf.parent.binaryTag )
                    # set binary tag
-                   indexBit = count( leaf.parent.children )-1
-                   indexBit = indexOf( leaf.binaryTag, False, start = indexBit)
-                   if( indexBit >= 0):
-                       leaf.binaryTag.invert(indexBit)
+                   #indexBit = count( leaf.parent.children )-1
+                   #indexBit = indexOf( leaf.binaryTag, False, start = indexBit)
+                   #if( indexBit >= 0):
+                   #    leaf.binaryTag.invert(indexBit)
                    # reverse reverse label, if necessary
                    node = leaf.parent
                    while( node.parent != None):
@@ -121,35 +121,49 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                            break
                if( i > size ):
                     probabilityOfNodeCreation *= 0.6
+        self.treeCompressVertical()
+        self.treeCompressHorizontal()
+        self.treeSetBinaryTags()
         return
-  
+      
     # horizontal compression od the tree
-    def compressTreeHorizontal(self):
+    def treeCompressHorizontal(self):
         return
        
      # vertical compression od the tree
-    def compressTreeVertical(self):
-        for n in self.children:
-            for c in n.children:
-                if( n.nodeLabel[:-1] == c.nodeLabel[:-1]):
-                    for x in c.children:
-                        x.parent = self
+    def treeCompressVertical(self):
+        #for n in self.children:
+        #    for c in n.children:
+        #        if( n.nodeLabel[:-1] == c.nodeLabel[:-1]):
+        #            for x in c.children:
+        #                x.parent = self
         #for n1 in self.children:
         #    for n2 in self.children:
         #        if n1.nodeLabel == n2.nodeLabel and n1!=n2:
         #            n2.parent = None
         #            for c in n2.children:
         #                c.parent = n1  
-        for n in self.children:
-             n.compressTree()
+        #for n in self.children:
+        #     n.compressTree()
         return
-         
+ 
+    # set binary tag of all nodes according to Hamming distances
+    def treeSetBinaryTags(self):
+        #for node in self.children:
+            #indexBit = count( leaf.parent.children )-1
+                   #indexBit = indexOf( leaf.binaryTag, False, start = indexBit)
+                   #if( indexBit >= 0):
+                   #    leaf.binaryTag.invert(indexBit)
+   
+        return
+
+        
 # initialization of the individual
 def initGaNodeIndividual(ind_class, labels, size):
     rootBitArray = BitArray(int = 0, length = size)
     root = ind_class('--', rootBitArray)
-    root.initializeTree( labels, size)
-    root.compressTreeHorizontal()
+    root.treeInitialize(labels, size)
+    root.treeCompressHorizontal()
     return root
 
 # mutation
