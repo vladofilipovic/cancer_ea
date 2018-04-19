@@ -11,14 +11,6 @@ from anytree import NodeMixin, RenderTree, PostOrderIter
 
 from bitstring import BitArray
 
-# helper function that flip the label
-def flip(label):
-    if(label.endswith('+')):
-        return label.replace('+', '-')
-    elif(label.endswith('-')): 
-        return label.replace('-', '+')
-    return label
-
 # helper function that count elements in collection
 def count(collection):
     i=0
@@ -59,11 +51,19 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
         child.parent = self
         return
 
+    def flipNodeLabel(self):
+        self.nodeLabel = self.nodeLabel.strip()
+        if(self.nodeLabel.endswith('+')):
+            self.nodeLabel = self.nodeLabel[:-1] + '-'
+        elif(self.nodeLabel.endswith('-')): 
+            self.nodeLabel = self.nodeLabel[:-1] + '+'
+        return
+
     # initialization od the tree
-    def initializeSubtree(self, labels, size):
-           currentTreeSize = 1
-           probabilityOfNodeCreation = 0.9
-           for i in range(2 * size):
+    def initializeTree(self, labels, size):
+        currentTreeSize = 1
+        probabilityOfNodeCreation = 0.9
+        for i in range(2 * size):
                if( random.random() < probabilityOfNodeCreation):
                    # create new leaf node
                    labelToInsert = random.choice( labels ) + '+'
@@ -84,16 +84,18 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                    # attach leaf node
                    parentOfLeaf.attachAsChild(leaf)
                    leaf.binaryTag.append( leaf.parent.binaryTag )
-                   #
+                   # set binary tag
                    indexBit = count( leaf.parent.children )-1
-                   indexBit = indexOf( leaf.binaryTag, False, start = indexBit+1)
+                   indexBit = indexOf( leaf.binaryTag, False, start = indexBit)
                    if( indexBit >= 0):
                        leaf.binaryTag.invert(indexBit)
+                   # reverse reverse label, if necessary
                    node = leaf.parent
-                   # reverse mutation label, if necessary
                    while( node.parent != None):
                        if( leaf.nodeLabel == node.nodeLabel):
-                           leaf.nodeLabel = flip(leaf.nodeLabel)
+                           leaf.flipNodeLabel()
+                           break
+                       if( leaf.nodeLabel[:-1] == node.nodeLabel[:-1]):
                            break
                        node = node.parent
                    currentTreeSize += 1 
@@ -105,6 +107,40 @@ class GaNode(GaNodeInfo, NodeMixin):  # Add Node feature
                            break
                if( i > size ):
                     probabilityOfNodeCreation *= 0.6
- 
-
+        return
+        
+     # compression od the tree
+    def compressTree(self):
+        for n in self.children:
+            for c in n.children:
+                if( n.nodeLabel[:-1] == c.nodeLabel[:-1]):
+                    for x in c.children:
+                        x.parent = self
+        #for n1 in self.children:
+        #    for n2 in self.children:
+        #        if n1.nodeLabel == n2.nodeLabel and n1!=n2:
+        #            n2.parent = None
+        #            for c in n2.children:
+        #                c.parent = n1  
+        for n in self.children:
+             n.compressTree()
+        return
          
+# initialization of the individual
+def initIndividual(ind_class, labels, size):
+    rootBitArray = BitArray(int = 0, length = size)
+    root = ind_class('--', rootBitArray)
+    root.initializeTree( labels, size)
+    #root.compressTree()
+    return root
+
+# mutation
+def mutation(individual):
+    individual.printTree()
+    #randomIndex = random.choice(individual.children)
+    return (individual,)
+
+# evaluation
+def evaluation(individual):
+    return (individual),
+  
