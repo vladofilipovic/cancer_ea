@@ -89,7 +89,7 @@ class GaNode(GaNodeInfo, NodeMixin):
         """
         current_tree_size = 1
         probability_of_node_creation = 0.9
-        for i in range(2 * size):
+        for i in range( 2 * size ):
                if( random.random() < probability_of_node_creation):
                    # create new leaf node
                    label_to_insert = random.choice( labels ) + '+'
@@ -126,7 +126,7 @@ class GaNode(GaNodeInfo, NodeMixin):
                            current_tree_size -= 1
                            break
                if( i > size ):
-                    probability_of_node_creation *= 0.6
+                    probability_of_node_creation *= 0.7
         self.tree_compress_vertical()
         self.tree_compress_horizontal()
         self.tree_set_binary_tags(labels)
@@ -248,7 +248,7 @@ def init_ga_node_individual(ind_class, labels, size):
     """
     Initialization of the individual.
     """
-    rootBitArray = BitArray(int = 0, length = size)
+    rootBitArray = BitArray(int = 0, length = len(labels) )
     root = ind_class('--', rootBitArray)
     root.tree_initialize(labels, size)
     return root

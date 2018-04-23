@@ -63,7 +63,7 @@ def main():
                      init_ga_node_individual, 
                      creator.Individual, 
                      labels=labels, 
-                     size=2 * len(labels))
+                     size=3 * len(labels))
     # registering mutation operator to toolbbox 
     toolbox.register("mutate", mutation_ga_node)
     # registering population to toolbbox 
