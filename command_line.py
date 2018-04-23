@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
 """
-Created on Thu Apr 19 22:18:29 2018
+This module is used for obtaining execution paramteters.
+
+Created on Thu Apr 12 11:44:04 2018
 
 @author: vlado.filipovic
 """
@@ -8,7 +9,10 @@ Created on Thu Apr 19 22:18:29 2018
 import re
 
 
-def getExecutionParameters(options, args):
+def get_execution_parameters(options, args):
+    """
+    Obtains execution paramteters.
+    """
     randomSeed_re = re.compile(r'[R|r]andom[S|s]eed=[0-9]+')
     inputFile_re = re.compile(r'[I|i]nput[F|f]ile=.*\.in')
 
