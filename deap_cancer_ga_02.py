@@ -48,56 +48,46 @@ def main():
         for x in reads:
             print(x);
     
-    # creating fitness function
+    # create fitness function
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
-    # creating strucute of the individual
+    # create strucute of the individual
     creator.create("Individual", GaNode, fitness=creator.FitnessMax)
     
-    # creating toolbox for execution of the genetic algorithm
+    # create toolbox for execution of the genetic algorithm
     toolbox = base.Toolbox()
     
-    # registering bolean attribute to toolbbox 
+    # register bolean attribute to toolbbox 
     toolbox.register("attr_bool", random.randint, 0, 1)
-    # registering individual creation to toolbbox 
+    # register individual creation to toolbbox 
     toolbox.register("individual", 
                      init_ga_node_individual, 
                      creator.Individual, 
                      labels=labels, 
                      size=3 * len(labels))
-    # registering mutation operator to toolbbox 
+    # register mutation operator to toolbbox 
     toolbox.register("mutate", mutation_ga_node)
-    # registering population to toolbbox 
+    # register population to toolbbox 
     toolbox.register("population", 
                      tools.initRepeat, 
                      list, 
                      toolbox.individual)
  
+    # register evaluation function
     toolbox.register("evaluate", evaluation_ga_node, reads)
 
+    # register the crossover operator
+    toolbox.register("mate", tools.cxTwoPoint)
     
-    # creating one individual via toolbox
-    test_ind = toolbox.individual()
+    # register a mutation operator with a probability to
+    # flip each attribute/gene of 0.05
+    toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
     
-    # printing test individual 
-    print( test_ind )
+    # operator for selecting individuals for breeding the next
+    # generation: each individual of the current generation
+    # is replaced by the 'fittest' (best) of three individuals
+    # drawn randomly from the current generation.
+    toolbox.register("select", tools.selTournament, tournsize=3)
     
-    # testing if created individual is inherited from GaMode
-    # and printing output
-    if(issubclass(type(test_ind), GaNode)):
-        print( "Class Individual is sublass of class GaNode")
-    else:
-        print( "Class Individual is NOT sublass of class GaNode")
-    
-    # setting fitness of the individual
-    test_ind.fitness.values = (12, 0)
-    
-    # executiong mutation on the individual
-    toolbox.mutate(test_ind)
-    
-    # assign reads to nodes and calculate total distance
-    (assignment, diff) = assign_reads_to_tree(test_ind, reads)
-    print(assignment)
-    print( diff )    
     return
 
 # this means that if this script is executed, then 

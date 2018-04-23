@@ -263,11 +263,14 @@ def mutation_ga_node(individual):
     #randomIndex = random.choice(individual.children)
     return (individual,)
 
-def evaluation_ga_node(individual):
+def evaluation_ga_node(individual, reads):
     """
     evaluation of the individual.
     """
-    print( "In evaluation" )
-    
-    return (individual),
+    total_distance = 0
+    for read in reads:
+        node = closest_node_in_tree( root, read )
+        bit_array = node.binary_tag ^ read.binary_read
+        total_distance += bit_array.count(True)
+    return total_distance    
   
