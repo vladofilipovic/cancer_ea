@@ -1,5 +1,6 @@
 """
-This module is an entry  point of the application.
+This module contains an example how to use Deap for GA
+that solves problem we are dealing with.
 
 Created on Thu Apr 12 11:44:04 2018
 

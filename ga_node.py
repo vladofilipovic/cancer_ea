@@ -41,8 +41,8 @@ class GaNode(GaNodeInfo, NodeMixin):
         """
         ret = ""
         for pre, _, node in RenderTree(self):
-            treestr = u"%s%s" % (pre, node.node_label)
-            ret += treestr.ljust(18) + ' ' + node.binary_tag.bin + '\n'
+            treestr = u"%s%s " % (pre, node.node_label)
+            ret += treestr.ljust( 10 ) + node.binary_tag.bin + '\n'
         return ret
     
     def __str__(self):
@@ -51,8 +51,8 @@ class GaNode(GaNodeInfo, NodeMixin):
         """
         ret = ""
         for pre, _, node in RenderTree(self):
-            treestr = u"%s%s" % (pre, node.node_label)
-            ret += treestr.ljust(18) + ' ' + node.binary_tag.bin + '\n'
+            treestr = u"%s%s " % (pre, node.node_label)
+            ret += treestr.ljust( 10 ) + node.binary_tag.bin + '\n'
         return ret
     
     def tree_print( self, endS = '\n'):
@@ -61,7 +61,7 @@ class GaNode(GaNodeInfo, NodeMixin):
         """
         for pre, _, node in RenderTree(self):
             treestr = u"%s%s " % (pre, node.node_label)
-            print(treestr.ljust(8), node.binary_tag.bin )
+            print(treestr.ljust( 10 ), node.binary_tag.bin )
         print(end=endS)
         return
     
@@ -136,12 +136,14 @@ class GaNode(GaNodeInfo, NodeMixin):
         """
         Horizontal compression od the tree.
         """
+        print( "Tree Compress horizontal" )
         return
         
     def tree_compress_vertical(self):
         """
         Vertical compression od the tree.
         """
+        print( "Tree Compress vertical" )
         #for n in self.children:
         #    for c in n.children:
         #        if( n.node_label[:-1] == c.node_label[:-1]):
@@ -210,23 +212,23 @@ class GaNode(GaNodeInfo, NodeMixin):
         for node in self.children:
             node.tree_set_binary_tags_hamming()
         return
+    
+    def closest_node_in_tree( self, read ):
+        """
+        Finds the closest node in the tree for the given read.
+        """
+        closest = self
+        closest_bit_array = self.binary_tag ^ read.binary_read 
+        closest_distance = closest_bit_array.count(True)
+        for node in PostOrderIter(self):
+            current_bit_array = node.binary_tag ^ read.binary_read
+            current_distance = current_bit_array.count(True)
+            if( current_distance < closest_distance):
+                closest = node
+                closest_bit_array = current_bit_array
+                closest_distance = current_distance
+        return (closest, closest_distance)
 
-
-def closest_node_in_tree( root, read ):
-    """
-    Finds the closest node in the tree for the given read.
-    """
-    closest = root
-    closest_bit_array = root.binary_tag ^ read.binary_read 
-    closest_distance = closest_bit_array.count(True)
-    for node in PostOrderIter(root):
-        current_bit_array = node.binary_tag ^ read.binary_read
-        current_distance = current_bit_array.count(True)
-        if( current_distance < closest_distance):
-            closest = node
-            closest_bit_array = current_bit_array
-            closest_distance = current_distance
-    return closest
 
 
 def assign_reads_to_tree( root, reads):
@@ -237,10 +239,9 @@ def assign_reads_to_tree( root, reads):
     total_distance = 0
     complete_assignment = {}
     for read in reads:
-        node = closest_node_in_tree( root, read )
+        (node, d) = root.closest_node_in_tree( read )
         complete_assignment[read] = node
-        bit_array = node.binary_tag ^ read.binary_read
-        total_distance += bit_array.count(True)
+        total_distance += d
     return (complete_assignment, total_distance)    
     
     
@@ -253,24 +254,27 @@ def init_ga_node_individual(ind_class, labels, size):
     root.tree_initialize(labels, size)
     return root
 
+def evaluation_ga_node(reads, individual):
+    """
+    evaluation of the individual.
+    """
+    objection_value = 0
+    for read in reads:
+        (node, d) = individual.closest_node_in_tree( read )
+        objection_value += d
+    return (objection_value,)    
+
+def crossover_ga_node(individual1, individual2):
+    """
+    Crossover between individual1 and individual2.
+    """
+    print( "In crossover" )
+    return (individual1, individual2)
+
 def mutation_ga_node(individual):
     """
     Mutatuion of the individual.
     """
     print( "In mutation" )
-    print( individual )
-    #individual.printTree()
     #randomIndex = random.choice(individual.children)
     return (individual,)
-
-def evaluation_ga_node(individual, reads):
-    """
-    evaluation of the individual.
-    """
-    total_distance = 0
-    for read in reads:
-        node = closest_node_in_tree( root, read )
-        bit_array = node.binary_tag ^ read.binary_read
-        total_distance += bit_array.count(True)
-    return total_distance    
-  
