@@ -214,12 +214,6 @@ class GaNode(GaNodeInfo, NodeMixin):
     def closest_node_in_tree( self, read ):
         """
         Finds the closest node in the tree for the given read.
-
-        :param self: this GaNode that represents root of the tree where colsest 
-                     node is to be find.
-        :param read: an ReadElelemnt that represents obtained binary read.
-        :returns: node in the subtree that has attached binary tag that is 
-                  the closest to the parameter read. 
         """
         closest = self
         closest_bit_array = self.binary_tag ^ read.binary_read 

@@ -1,9 +1,9 @@
 """
 This module is an entry  point of the application.
 
-Created on Thu Apr 12 11:44:04 2018
+Example for command-line parameters:
+inputFile=example_01.in randomSeed=1113 --debug
 
-@author: vlado.filipovic
 """
 
 import optparse

@@ -1,8 +1,20 @@
+"""
+This module contains an example how to use bitstring
+library.
+
+"""
 
 from bitstring import BitArray
 
-a = BitArray(bin='00101')
-b = BitArray(bin='10101')
+def main():
+    a = BitArray(bin='00101')
+    b = BitArray(bin='10101')
+    
+    print(a)
+    print(b)
+    return
 
-print(a)
-print(b)
+# this means that if this script is executed, then 
+# main() will be executed
+if __name__ == "__main__":
+    main()

@@ -2,9 +2,9 @@
 This module contains an example how to use Deap for GA
 that solves problem we are dealing with.
 
-Created on Thu Apr 12 11:44:04 2018
+Example for command-line parameters:
+inputFile=example_01.in randomSeed=1113 --debug
 
-@author: vlado.filipovic
 """
 
 import optparse
@@ -202,9 +202,6 @@ def main():
         print (pop)  
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is\n%s\n, with fitness %s" % (best_ind, best_ind.fitness.values))
-
-
- 
     return
 
 # this means that if this script is executed, then 
